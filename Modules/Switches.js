@@ -214,11 +214,11 @@ const VarstoRead = {
         { name: "I_OH_FLT_CTL_ELAC_2_L" },
         { name: "I_OH_FLT_CTL_ELAC_2_U" },
         { name: "I_OH_FLT_CTL_SEC_2_L" },
-        { name: "I_OH_FLT_CTL_FAC_3_L" },
-        { name: "I_OH_FLT_CTL_FAC_3_U" },
+       // { name: "I_OH_FLT_CTL_FAC_3_L" },
+      //  { name: "I_OH_FLT_CTL_FAC_3_U" },
         { name: "I_OH_FLT_CTL_SEC_3_U" },
-        { name: "I_OH_FLT_CTL_ELAC_3_L" },
-        { name: "I_OH_FLT_CTL_ELAC_3_U" },
+     //   { name: "I_OH_FLT_CTL_ELAC_3_L" },
+     //   { name: "I_OH_FLT_CTL_ELAC_3_U" },
         { name: "I_OH_FLT_CTL_SEC_3_L" },
 
         //EVAC
