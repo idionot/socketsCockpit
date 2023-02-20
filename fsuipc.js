@@ -10,11 +10,13 @@ const obj = new fsuipcWasm.FSUIPCWASM({
     console.log('Started');
   
     console.log(obj.lvarValues);
+    console.log(obj)
   
-    obj.flagLvarForUpdate("A32NX_IS_STATIONARY");
+    obj.flagLvarForUpdate("I_OH_ELEC_EXT_PWR_U");
   
     obj.setLvarUpdateCallback((newLvars) => {
       console.log(newLvars);
+      
     });
   
     // await obj.close();
