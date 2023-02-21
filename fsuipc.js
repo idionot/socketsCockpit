@@ -1,5 +1,5 @@
 import fsuipcWasm from 'fsuipc-wasm';
-import { VarstoRead } from './Modules/Switches.js'
+
 
 var fsuipcvars = {}
 
