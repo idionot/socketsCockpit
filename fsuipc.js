@@ -5,74 +5,238 @@ var fsuipcvars = {}
 
 const obj = new fsuipcWasm.FSUIPCWASM({});
 
+let timer = 0
+let lvars = [
+  "I_OH_AFT_FADEC_GND_1_L",
+  "I_OH_AFT_FADEC_GND_2_L",
+  "I_OH_APU_AUTOEXTING_TEST_L",
+  "I_OH_APU_AUTOEXTING_TEST_U",
+  "I_OH_CALLS_EMER_L",
+  "I_OH_CALLS_EMER_U",
+  "I_OH_CARGO_SMOKE_AFT_L",
+  "I_OH_CARGO_SMOKE_AFT_U",
+  "I_OH_CARGO_SMOKE_DISCHARGE_1",
+  "I_OH_CARGO_SMOKE_DISCHARGE_2",
+  "I_OH_CARGO_SMOKE_DISCHARGE_AGENT_2",
+  "I_OH_CARGO_SMOKE_FWD_L",
+  "I_OH_CARGO_SMOKE_FWD_U",
+  "I_OH_DOOR_CTL_L",
+  "I_OH_DOOR_CTL_U",
+  "I_OH_DOOR_VIDEO",
+  "I_OH_ELEC_AC_ESS_FEED_L",
+  "I_OH_ELEC_AC_ESS_FEED_U",
+  "I_OH_ELEC_APU_GENERATOR_L",
+  "I_OH_ELEC_APU_GENERATOR_U",
+  "I_OH_ELEC_APU_MASTER_L",
+  "I_OH_ELEC_APU_MASTER_U",
+  "I_OH_ELEC_APU_START_L",
+  "I_OH_ELEC_APU_START_U",
+  "I_OH_ELEC_BAT1_L",
+  "I_OH_ELEC_BAT1_U",
+  "I_OH_ELEC_BAT2_L",
+  "I_OH_ELEC_BAT2_U",
+  "I_OH_ELEC_BUSTIE_L",
+  "I_OH_ELEC_COMMERCIAL_L",
+  "I_OH_ELEC_COMMERCIAL_U",
+  "I_OH_ELEC_EMERG_GEN_FAULT",
+  "I_OH_ELEC_EXT_PWR_L",
+  "I_OH_ELEC_EXT_PWR_U",
+  "I_OH_ELEC_GALY_L",
+  "I_OH_ELEC_GALY_U",
+  "I_OH_ELEC_GEN1_L",
+  "I_OH_ELEC_GEN1_LINE_L",
+  "I_OH_ELEC_GEN1_LINE_U",
+  "I_OH_ELEC_GEN1_U",
+  "I_OH_ELEC_GEN2_L",
+  "I_OH_ELEC_GEN2_U",
+  "I_OH_ELEC_IDG1_U",
+  "I_OH_ELEC_IDG2_U",
+  "I_OH_ENG_MANSTART_1_L",
+  "I_OH_ENG_MANSTART_2_L",
+  "I_OH_EVAC_COMMAND_L",
+  "I_OH_EVAC_COMMAND_U",
+  "I_OH_FIRE_APU_AGENT_L",
+  "I_OH_FIRE_APU_AGENT_U",
+  "I_OH_FIRE_APU_BUTTON",
+  "I_OH_FIRE_APU_BUTTON_COL1",
+  "I_OH_FIRE_APU_BUTTON_COL2",
+  "I_OH_FIRE_APU_BUTTON_ON_BATT",
+  "I_OH_FIRE_ENG1_AGENT1_L",
+  "I_OH_FIRE_ENG1_AGENT1_U",
+  "I_OH_FIRE_ENG1_AGENT2_L",
+  "I_OH_FIRE_ENG1_AGENT2_U",
+  "I_OH_FIRE_ENG1_BUTTON",
+  "I_OH_FIRE_ENG1_BUTTON_COL1",
+  "I_OH_FIRE_ENG1_BUTTON_COL2",
+  "I_OH_FIRE_ENG2_AGENT1_L",
+  "I_OH_FIRE_ENG2_AGENT1_U",
+  "I_OH_FIRE_ENG2_AGENT2_L",
+  "I_OH_FIRE_ENG2_AGENT2_U",
+  "I_OH_FIRE_ENG2_BUTTON",
+  "I_OH_FIRE_ENG2_BUTTON_COL1",
+  "I_OH_FIRE_ENG2_BUTTON_COL2",
+  "I_OH_FLT_CTL_ELAC_1_L",
+  "I_OH_FLT_CTL_ELAC_1_U",
+  "I_OH_FLT_CTL_ELAC_2_L",
+  "I_OH_FLT_CTL_ELAC_2_U",
+  "I_OH_FLT_CTL_FAC_1_L",
+  "I_OH_FLT_CTL_FAC_1_U",
+  "I_OH_FLT_CTL_FAC_2_L",
+  "I_OH_FLT_CTL_FAC_2_U",
+  "I_OH_FLT_CTL_SEC_1_L",
+  "I_OH_FLT_CTL_SEC_1_U",
+  "I_OH_FLT_CTL_SEC_2_L",
+  "I_OH_FLT_CTL_SEC_2_U",
+  "I_OH_FLT_CTL_SEC_3_L",
+  "I_OH_FLT_CTL_SEC_3_U",
+  "I_OH_FUEL_CENTER_1_L",
+  "I_OH_FUEL_CENTER_1_U",
+  "I_OH_FUEL_CENTER_2_L",
+  "I_OH_FUEL_CENTER_2_U",
+  "I_OH_FUEL_LEFT_1_L",
+  "I_OH_FUEL_LEFT_1_U",
+  "I_OH_FUEL_LEFT_2_L",
+  "I_OH_FUEL_LEFT_2_U",
+  "I_OH_FUEL_MODE_SEL_L",
+  "I_OH_FUEL_MODE_SEL_U",
+  "I_OH_FUEL_RIGHT_1_L",
+  "I_OH_FUEL_RIGHT_1_U",
+  "I_OH_FUEL_RIGHT_2_L",
+  "I_OH_FUEL_RIGHT_2_U",
+  "I_OH_FUEL_XFEED_L",
+  "I_OH_FUEL_XFEED_U",
+  "I_OH_GPWS_FLAP_MODE_L",
+  "I_OH_GPWS_GS_MODE_L",
+  "I_OH_GPWS_LDG_FLAP3_L",
+  "I_OH_GPWS_SYS_L",
+  "I_OH_GPWS_SYS_U",
+  "I_OH_GPWS_TERR_L",
+  "I_OH_GPWS_TERR_U",
+  "I_OH_HYD_BLUE_ELEC_PUMP_L",
+  "I_OH_HYD_BLUE_ELEC_PUMP_U",
+  "I_OH_HYD_BLUE_PUMP_OVERRIDE_L",
+  "I_OH_HYD_ENG_1_PUMP_L",
+  "I_OH_HYD_ENG_1_PUMP_U",
+  "I_OH_HYD_ENG_2_PUMP_L",
+  "I_OH_HYD_ENG_2_PUMP_U",
+  "I_OH_HYD_LMV_BLUE_L",
+  "I_OH_HYD_LMV_GREEN_L",
+  "I_OH_HYD_LMV_YELLOW_L",
+  "I_OH_HYD_PTU_L",
+  "I_OH_HYD_PTU_U",
+  "I_OH_HYD_YELLOW_ELEC_PUMP_L",
+  "I_OH_HYD_YELLOW_ELEC_PUMP_U",
+  "I_OH_INT_LT_EMER_OFF",
+  "I_OH_IN_LT_ICE",
+  "I_OH_LIGHTING_AVIONICS_COMPT",
+  "I_OH_LIGHTING_AVIONICS_COMPT_L",
+  "I_OH_NAV_ADIRS_ON_BAT",
+  "I_OH_NAV_ADIRS_QUEUE_CLR",
+  "I_OH_NAV_ADIRS_QUEUE_ENT",
+  "I_OH_NAV_ADR1_L",
+  "I_OH_NAV_ADR1_U",
+  "I_OH_NAV_ADR2_L",
+  "I_OH_NAV_ADR2_U",
+  "I_OH_NAV_ADR3_L",
+  "I_OH_NAV_ADR3_U",
+  "I_OH_NAV_IR1_ALIGN",
+  "I_OH_NAV_IR1_FAULT",
+  "I_OH_NAV_IR1_SWITCH_L",
+  "I_OH_NAV_IR1_SWITCH_U",
+  "I_OH_NAV_IR2_ALIGN",
+  "I_OH_NAV_IR2_FAULT",
+  "I_OH_NAV_IR2_SWITCH_L",
+  "I_OH_NAV_IR2_SWITCH_U",
+  "I_OH_NAV_IR3_ALIGN",
+  "I_OH_NAV_IR3_FAULT",
+  "I_OH_NAV_IR3_SWITCH_L",
+  "I_OH_NAV_IR3_SWITCH_U",
+  "I_OH_OXYGEN_CREW_OXYGEN_L",
+  "I_OH_OXYGEN_HIGH_ALT_L",
+  "I_OH_OXYGEN_PASSENGER_U",
+  "I_OH_OXYGEN_TMR_RESET_L",
+  "I_OH_OXYGEN_TMR_RESET_U",
+  "I_OH_PNEUMATIC_APU_BLEED_L",
+  "I_OH_PNEUMATIC_APU_BLEED_U",
+  "I_OH_PNEUMATIC_BLOWER_L",
+  "I_OH_PNEUMATIC_BLOWER_U",
+  "I_OH_PNEUMATIC_CAB_FANS_L",
+  "I_OH_PNEUMATIC_CAB_FANS_U",
+  "I_OH_PNEUMATIC_CARGO_AFT_ISOL_VALVE_L",
+  "I_OH_PNEUMATIC_CARGO_AFT_ISOL_VALVE_U",
+  "I_OH_PNEUMATIC_CARGO_FWD_ISOL_VALVE_L",
+  "I_OH_PNEUMATIC_CARGO_FWD_ISOL_VALVE_U",
+  "I_OH_PNEUMATIC_DITCHING_L",
+  "I_OH_PNEUMATIC_ENG1_ANTI_ICE_L",
+  "I_OH_PNEUMATIC_ENG1_ANTI_ICE_U",
+  "I_OH_PNEUMATIC_ENG1_BLEED_L",
+  "I_OH_PNEUMATIC_ENG1_BLEED_U",
+  "I_OH_PNEUMATIC_ENG2_ANTI_ICE_L",
+  "I_OH_PNEUMATIC_ENG2_ANTI_ICE_U",
+  "I_OH_PNEUMATIC_ENG2_BLEED_L",
+  "I_OH_PNEUMATIC_ENG2_BLEED_U",
+  "I_OH_PNEUMATIC_EXTRACT_L",
+  "I_OH_PNEUMATIC_EXTRACT_U",
+  "I_OH_PNEUMATIC_HOT_AIR_AFT_CARGO_L",
+  "I_OH_PNEUMATIC_HOT_AIR_AFT_CARGO_U",
+  "I_OH_PNEUMATIC_HOT_AIR_L",
+  "I_OH_PNEUMATIC_HOT_AIR_U",
+  "I_OH_PNEUMATIC_PACK_1_L",
+  "I_OH_PNEUMATIC_PACK_1_U",
+  "I_OH_PNEUMATIC_PACK_2_L",
+  "I_OH_PNEUMATIC_PACK_2_U",
+  "I_OH_PNEUMATIC_PRESS_MODE_L",
+  "I_OH_PNEUMATIC_PRESS_MODE_U",
+  "I_OH_PNEUMATIC_RAM_AIR_L",
+  "I_OH_PNEUMATIC_WING_ANTI_ICE_L",
+  "I_OH_PNEUMATIC_WING_ANTI_ICE_U",
+  "I_OH_PROBE_HEAT_L",
+  "I_OH_PROBE_HEAT_U",
+  "I_OH_RCRD_GND_CTL_L",
+  "I_OH_SVCE_INT_OVRD",
+  "I_OH_SVCE_INT_OVRD_L",
+  "S_OH_PNEUMATIC_RAM_AIR_Cover",
+  "S_OH_OXYGEN_HIGH_ALT_Cover",
+  "S_OH_OXYGEN_MASK_MAN_ON_Cover",
+  "S_OH_HYD_RAT_MAN_ON_Cover",
+  "S_OH_HYD_LMV_YELLOW_Cover",
+  "S_OH_HYD_LMV_GREEN_Cover",
+  "S_OH_HYD_LMV_BLUE_Cover",
+  "S_OH_HYD_BLUE_PUMP_OVERRIDE_Cover",
+  "S_OH_HYD_BLUE_ELEC_PUMP_Cover",
+  "S_OH_FIRE_ENG2_BUTTON_Cover",
+  "S_OH_FIRE_ENG1_BUTTON_Cover",
+  "S_OH_FIRE_APU_BUTTON_Cover",
+  "S_OH_EVAC_COMMAND_Cover",
+  "S_OH_ELEC_IDG2_Cover",
+  "S_OH_ELEC_IDG1_Cover",
+  "S_OH_ELEC_EMER_GEN_TEST_Cover",
+  "S_OH_ELEC_EMER_GEN_MAN_ON_Cover",
+  "S_OH_CALLS_EMER_Cover",
 
-
+]
 
 async function test() {
   await obj.start();
+  // console.log(obj.lvarValues)
 
 
-  obj.flagLvarForUpdate("I_OH_NAV_ADIRS_ON_BAT"); 
-  obj.flagLvarForUpdate("I_OH_NAV_IR1_SWITCH_U"); 
-  obj.flagLvarForUpdate("I_OH_NAV_IR1_SWITCH_L"); 
-  obj.flagLvarForUpdate("I_OH_NAV_IR2_SWITCH_U"); 
-  obj.flagLvarForUpdate("I_OH_NAV_IR2_SWITCH_L"); 
-  obj.flagLvarForUpdate("I_OH_NAV_IR3_SWITCH_L"); 
-  obj.flagLvarForUpdate("I_OH_NAV_IR3_SWITCH_U"); 
-  obj.flagLvarForUpdate("I_OH_NAV_ADR1_L"); 
-  obj.flagLvarForUpdate("I_OH_NAV_ADR2_L"); 
-  obj.flagLvarForUpdate("I_OH_NAV_ADR3_L"); 
+  setInterval(() => {
+    if (timer === lvars.length) {
+      console.log("Lvars Carregadas")
+      timer++
+      obj.setLvarUpdateCallback((newLvars) => {
+        console.log(newLvars)
 
-  obj.flagLvarForUpdate("I_OH_NAV_ADR1_U"); 
-  obj.flagLvarForUpdate("I_OH_NAV_ADR2_U"); 
-  obj.flagLvarForUpdate("I_OH_NAV_ADR3_U"); 
+      });
+      // await obj.close();
+    } else if (timer < lvars.length) {
+      console.log(lvars[timer])
+      obj.flagLvarForUpdate(lvars[timer]);
+      timer++
+    }
+  }, 50);
 
-  obj.flagLvarForUpdate("S_OH_NAV_SYS_DISP"); 
-  obj.flagLvarForUpdate("S_OH_NAV_DATA_DISP"); 
-  obj.flagLvarForUpdate("S_OH_NAV_IR1_MODE"); 
-
-  obj.flagLvarForUpdate("S_OH_NAV_IR2_MODE"); 
-  obj.flagLvarForUpdate("S_OH_NAV_IR3_MODE"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_FAC_1_L"); 
-
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_FAC_1_U"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_SEC_1_U"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_ELAC_1_L"); 
-
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_ELAC_1_U"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_SEC_1_L"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_FAC_2_L"); 
-
-  
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_FAC_2_U"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_SEC_2_U"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_ELAC_2_L"); 
-
-  
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_ELAC_2_U"); 
-  obj.flagLvarForUpdate("I_OH_FLT_CTL_SEC_2_L"); 
-  
-
-  obj.flagLvarForUpdate("I_OH_EVAC_COMMAND_L"); 
-  obj.flagLvarForUpdate("I_OH_EVAC_COMMAND_U"); 
-  obj.flagLvarForUpdate("S_OH_EVAC_COMMAND_Cover"); 
-
-
-  obj.flagLvarForUpdate("I_OH_GPWS_FLAP_MODE_L"); 
-  obj.flagLvarForUpdate("I_OH_GPWS_GS_MODE_L"); 
-  obj.flagLvarForUpdate("I_OH_GPWS_LDG_FLAP3_L"); 
-
-  obj.flagLvarForUpdate("I_OH_GPWS_SYS_U"); 
-  obj.flagLvarForUpdate("I_OH_GPWS_TERR_L"); 
-  obj.flagLvarForUpdate("I_OH_GPWS_TERR_U"); 
-
-
-
-
-
-  obj.setLvarUpdateCallback((newLvars) => {
-    console.log(newLvars)
-  });
-  // await obj.close();
 }
+
 test()
