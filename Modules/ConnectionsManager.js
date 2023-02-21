@@ -1,6 +1,7 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { FsuipcListener, SendA320FButtonCalc, SendA320FKnobCalc, FsuipcRefresh } from "./Listeners.js"
+import { ConnectionAdd } from "./FsuipcWasm.js"
 
 
 let socketList = {}
@@ -19,7 +20,7 @@ const Connection = (credenciais, ws) => {
 
     io.on("connection", (socket) => {
         socket.on("REFRESHVARS", (airplane) => {
-            FsuipcRefresh(airplane, ws, socketList)
+            FsuipcRefresh(socketList)
 
 
         })
@@ -35,7 +36,7 @@ const Connection = (credenciais, ws) => {
         socket.on("INPUTSEND", (data) => {
             console.log("dataNO31:", data)
             if (data.airplane === "a320fenix") {
-               // SendA320FButtonCalc(data.button, ws)
+                // SendA320FButtonCalc(data.button, ws)
             }
 
 
@@ -44,7 +45,7 @@ const Connection = (credenciais, ws) => {
             console.log(data)
             if (data.airplane === "a320fenix") {
 
-               // SendA320FKnobCalc(data.knob, data.value, ws)
+                // SendA320FKnobCalc(data.knob, data.value, ws)
             }
 
         })

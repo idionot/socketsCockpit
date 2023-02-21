@@ -2,6 +2,7 @@ import fsuipcWasm from 'fsuipc-wasm';
 
 
 var fsuipcvars = {}
+var socketList;
 
 const obj = new fsuipcWasm.FSUIPCWASM({});
 
@@ -216,6 +217,32 @@ let lvars = [
 
 ]
 
+
+
+
+const ConnectionAdd = (sl) => {
+  socketList = sl
+}
+
+const SendCallback = (nvars) => {
+  Object.keys(nvars).forEach((item) => {
+
+    Object.keys(socketList).forEach((conn) => {
+
+      var res = {}
+      res[item] = nvars[item]
+      console.log(res[item])
+      socketList[conn].emit("CHANGEVAR", res)
+    })
+
+  });
+}
+
+
+
+
+
+
 async function test() {
   await obj.start();
   // console.log(obj.lvarValues)
@@ -226,12 +253,12 @@ async function test() {
       console.log("Lvars Carregadas")
       timer++
       obj.setLvarUpdateCallback((newLvars) => {
-        console.log(newLvars)
+        SendCallback(newLvars)
 
       });
       // await obj.close();
     } else if (timer < lvars.length) {
-      console.log(lvars[timer])
+      //console.log(lvars[timer])
       obj.flagLvarForUpdate(lvars[timer]);
       timer++
     }
@@ -240,3 +267,6 @@ async function test() {
 }
 
 test()
+
+export { ConnectionAdd }
+
